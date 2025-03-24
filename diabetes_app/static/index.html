@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Prediction</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 30px;
+            background-color: #f4f7fa;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        /* Top bar container */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        /* Input area container */
+        .input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        /* Prompt text */
+        .import-prompt {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        /* Template download area */
+        .template-download {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .template-download span {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        /* Export button area */
+        .export-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        /* Hide the default file input */
+        #csvFile {
+            display: none;
+        }
+        /* Custom file selection button */
+        .file-select-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        .file-select-btn:hover {
+            background-color: #2980b9;
+        }
+        .file-selected {
+            font-size: 14px;
+            color: #555;
+            margin-left: 10px;
+        }
+        /* Predict button */
+        .predict-btn {
+            padding: 10px 25px;
+            font-size: 16px;
+            color: white;
+            background-color: #2ecc71;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        .predict-btn:hover {
+            background-color: #27ae60;
+        }
+        .predict-btn:active {
+            transform: scale(0.95);
+        }
+        /* Export button */
+        .export-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #e67e22;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        .export-btn:hover {
+            background-color: #d35400;
+        }
+        .export-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        /* Download template button */
+        .download-btn {
+            padding: 8px 15px;
+            font-size: 14px;
+            color: white;
+            background-color: #9b59b6;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .download-btn:hover {
+            background-color: #8e44ad;
+        }
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+        th {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        td {
+            background-color: white;
+            color: #34495e;
+        }
+        /* Table row hover effect */
+        tr:hover td {
+            background-color: #f9f9f9;
+        }
+        /* Colors for Yes and No */
+        .yes {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .no {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+        /* Error message styles */
+        #result p {
+            text-align: center;
+            font-size: 16px;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Diabetes Prediction</h1>
+    <div class="top-bar">
+        <div class="template-download">
+            <span>Download Template:</span>
+            <button class="download-btn" onclick="downloadTemplate()">Download</button>
+        </div>
+        <div class="input-container">
+            <span class="import-prompt">Please import csv file.</span>
+            <input type="file" id="csvFile" accept=".csv">
+            <button class="file-select-btn" onclick="document.getElementById('csvFile').click()">Import File</button>
+            <span class="file-selected" id="fileName">No file selected</span>
+            <button class="predict-btn" onclick="predict()">Predict</button>
+        </div>
+        <div class="export-container">
+            <button class="export-btn" id="exportBtn" disabled>Export Results</button>
+        </div>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        // Global variable to store prediction results
+        let predictionData = null;
+
+        // Display the selected file name
+        document.getElementById('csvFile').addEventListener('change', function() {
+            const fileName = this.files[0] ? this.files[0].name : 'No file selected';
+            document.getElementById('fileName').textContent = fileName;
+        });
+
+        // Convert camelCase to space-separated format (e.g., FastingBloodSugar -> Fasting Blood Sugar)
+        function formatHeader(header) {
+            return header.replace(/([A-Z])/g, ' $1').trim();
+        }
+
+        // Convert SocioeconomicStatus values to Rich/Medium/Poor
+        function formatSocioeconomicStatus(value) {
+            if (value === 2) return 'Rich';
+            if (value === 1) return 'Medium';
+            if (value === 0) return 'Poor';
+            return value; 
+        }
+
+        // Download the template file
+        function downloadTemplate() {
+            const templateHeaders = [
+                'Age', 'Ethnicity', 'SocioeconomicStatus', 'EducationLevel', 'BMI',
+                'Smoking', 'AlcoholConsumption', 'PhysicalActivity', 'DietQuality',
+                'SleepQuality', 'Hypertension', 'SystolicBP', 'DiastolicBP',
+                'FastingBloodSugar', 'HbA1c', 'SerumCreatinine', 'BUNLevels',
+                'CholesterolTotal', 'CholesterolLDL', 'CholesterolHDL', 'Statins',
+                'FrequentUrination', 'ExcessiveThirst', 'UnexplainedWeightLoss',
+                'FatigueLevels', 'BlurredVision', 'QualityOfLifeScore',
+                'MedicalCheckupsFrequency', 'MedicationAdherence', 'HealthLiteracy'
+            ];
+            const csvContent = templateHeaders.join(',') + '\n';
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Example.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Export prediction results as CSV
+        function exportResults() {
+            if (!predictionData) {
+                alert('No prediction results to export.');
+                return;
+            }
+
+            const headers = ['FastingBloodSugar', 'HbA1c', 'FrequentUrination', 'Hypertension',
+                             'ExcessiveThirst', 'UnexplainedWeightLoss', 'BlurredVision',
+                             'SocioeconomicStatus', 'Diabetic'];
+            let csvContent = headers.map(formatHeader).join(',') + '\n';
+
+            predictionData.forEach(row => {
+                const rowData = headers.map(header => {
+                    let value = row[header];
+                    if (['FrequentUrination', 'Hypertension', 'ExcessiveThirst', 'UnexplainedWeightLoss', 'BlurredVision'].includes(header)) {
+                        return value === 1 ? 'Yes' : 'No';
+                    } else if (header === 'SocioeconomicStatus') {
+                        return formatSocioeconomicStatus(value);
+                    }
+                    return value;
+                });
+                csvContent += rowData.join(',') + '\n';
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Prediction_Results.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function predict() {
+            const fileInput = document.getElementById('csvFile');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please upload a CSV file.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/batch_predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('result').innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+                    return;
+                }
+
+                // Store prediction results
+                predictionData = data;
+
+                // Enable the export button
+                document.getElementById('exportBtn').disabled = false;
+
+                let table = '<table><tr><th>No.</th>';
+                const headers = ['FastingBloodSugar', 'HbA1c', 'FrequentUrination', 'Hypertension',
+                                 'ExcessiveThirst', 'UnexplainedWeightLoss', 'BlurredVision',
+                                 'SocioeconomicStatus', 'Diabetic'];
+                headers.forEach(header => {
+                    table += `<th>${formatHeader(header)}</th>`;
+                });
+                table += '</tr>';
+
+                data.forEach((row, index) => {
+                    table += `<tr><td>${index + 1}</td>`;
+                    headers.forEach(header => {
+                        let value = row[header];
+                        if (['FrequentUrination', 'Hypertension', 'ExcessiveThirst', 'UnexplainedWeightLoss', 'BlurredVision'].includes(header)) {
+                            value = value === 1 ? 'Yes' : 'No';
+                            const className = value === 'Yes' ? 'yes' : 'no';
+                            table += `<td class="${className}">${value}</td>`;
+                        } else if (header === 'SocioeconomicStatus') {
+                            value = formatSocioeconomicStatus(value);
+                            table += `<td>${value}</td>`;
+                        } else if (header === 'Diabetic') {
+                            const className = value === 'Yes' ? 'yes' : 'no';
+                            table += `<td class="${className}">${value}</td>`;
+                        } else {
+                            table += `<td>${value}</td>`;
+                        }
+                    });
+                    table += '</tr>';
+                });
+                table += '</table>';
+
+                document.getElementById('result').innerHTML = table;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = '<p style="color: red;">An error occurred during prediction.</p>';
+            });
+        }
+
+        // Bind the click event to the export button
+        document.getElementById('exportBtn').addEventListener('click', exportResults);
+    </script>
+</body>
+</html>
