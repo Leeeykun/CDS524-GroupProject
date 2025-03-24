@@ -1,73 +1,72 @@
-# 糖尿病预测系统
+# Diabetes Prediction System
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue) ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.3.2-orange) ![Flask](https://img.shields.io/badge/Flask-2.3.3-green) ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-## 项目概述
+## Project Overview
 
-糖尿病预测系统是一个基于机器学习的预测工具，旨在通过患者的健康数据预测其是否可能患有糖尿病。该系统使用多种特征选择方法和机器学习模型对数据进行分析，并通过一个基于 **Flask** 的 Web 服务提供批量预测功能。前端通过 HTML 页面与后端交互，用户可以上传 CSV 文件以获取预测结果。
+The Diabetes Prediction System is a machine learning-based tool designed to predict the likelihood of diabetes in patients using their health data. The system employs various feature selection methods and machine learning models for data analysis, and provides batch prediction functionality through a **Flask**-based web service. The front end interacts with the back end via an HTML page, allowing users to upload a CSV file to obtain prediction results.
 
-本项目包含以下主要功能：
-- 数据清理和预处理
-- 多种特征选择方法（F 检验、互信息法、RFE、随机森林特征重要性、L1 正则化）
-- 多种机器学习模型（逻辑回归、随机森林、XGBoost、MLP、集成模型）的训练和评估
-- Flask Web 服务，支持批量预测并返回 JSON 格式的结果
+This project includes the following main features:
+- Data cleaning and preprocessing
+- Multiple feature selection methods (F-test, Mutual Information, RFE, Random Forest Feature Importance, L1 Regularization)
+- Training and evaluation of various machine learning models (Logistic Regression, Random Forest, XGBoost, MLP, Ensemble Model)
+- Flask web service supporting batch predictions and returning results in JSON format
 
-## 数据集
+## Dataset
 
-项目使用的数据集为 `data.csv`，包含 1879 条记录和 46 个特征，主要包括：
-- 患者基本信息（如年龄、性别、BMI）
-- 生活方式特征（如吸烟、饮酒、运动）
-- 临床指标（如血压、血糖、HbA1c）
-- 目标变量 `Diagnosis`（0 表示未患糖尿病，1 表示患糖尿病）
-- 更多详细变量描述请看 Description of the variable.pdf
+The project uses the dataset `data.csv`, which contains 1879 records and 46 features, including:
+- Basic patient information (e.g., age, gender, BMI)
+- Lifestyle factors (e.g., smoking, alcohol consumption, physical activity)
+- Clinical indicators (e.g., blood pressure, blood sugar, HbA1c)
+- Target variable `Diagnosis` (0 for non-diabetic, 1 for diabetic)
+- For a detailed description of the variables, please refer to `Description of the variable.pdf`.
 
-## 功能
+## Features
 
-1. **数据清理**：
-   - 检查缺失值和重复值
+1. **Data Cleaning**:
+   - Check for missing values and duplicates
 
-2. **特征选择**：
-   - 使用多种方法选择重要特征：
-     - F 检验（`SelectKBest` with `f_classif`）
-     - 互信息法（`SelectKBest` with `mutual_info_classif`）
-     - 递归特征消除（RFE with RandomForestClassifier）
-     - 随机森林特征重要性
-     - L1 正则化（Lasso）
+2. **Feature Selection**:
+   - Use multiple methods to select important features:
+     - F-test (`SelectKBest` with `f_classif`)
+     - Mutual Information (`SelectKBest` with `mutual_info_classif`)
+     - Recursive Feature Elimination (RFE with RandomForestClassifier)
+     - Random Forest Feature Importance
+     - L1 Regularization (Lasso)
 
-3. **模型训练与评估**：
-   - 基线模型：逻辑回归
-   - 其他模型：随机森林、XGBoost、MLP、集成模型（Stacking）
-   - 评估指标：交叉验证准确率、混淆矩阵、分类报告、ROC 曲线和 AUC 分数
+3. **Model Training and Evaluation**:
+   - Baseline model: Logistic Regression
+   - Other models: Random Forest, XGBoost, MLP, Ensemble Model (Stacking)
+   - Evaluation metrics: Cross-validation accuracy, confusion matrix, classification report, ROC curve, and AUC score
 
-4. **Flask Web 服务**：
-   - 使用 Flask 构建后端服务，支持批量预测
-   - 用户通过前端页面上传 CSV 文件，获取糖尿病预测结果
-   - 返回 JSON 格式的预测结果，包含部分原始特征和预测结果（`Diabetic` 列，值为 "Yes" 或 "No"）
+4. **Flask Web Service**:
+   - Built with Flask to support batch predictions
+   - Users can upload a CSV file through the front-end page to obtain diabetes prediction results
+   - Returns prediction results in JSON format, including selected original features and the prediction result (`Diabetic` column, with values "Yes" or "No")
 
-## 安装
+## Installation
 
-### 环境要求
-- Python 3.12 或以上
-- 推荐使用虚拟环境（如 `venv` 或 `conda`）
+### Environment Requirements
+- Python 3.12 or higher
+- It is recommended to use a virtual environment (e.g., `venv` or `conda`)
 
-### 安装步骤
-1. 克隆项目仓库：
+### Installation Steps
+1. **Clone the Project Repository**:
    ```bash
-   git clone [https://github.com/your-username/diabetes-prediction-system.git](https://github.com/Leeeykun/CDS524-GroupProject.git)
-   cd CDS524-GroupProject.git
+   git clone https://github.com/Leeeykun/CDS524-GroupProject.git
+   cd CDS524-GroupProject
 
-2. 安装依赖：
+2. **Install Dependencies**:
    ```bash
    pip install -r requirements.txt
 
-3. 启动 Flask 应用：
-  在项目根目录下运行以下命令
-  Flask 应用将启动:
+3. **Start the Flask Application**:
+  Run the following command in the project root directory to start the Flask application:
    ```bash
    python app.py
- 默认地址为 http://127.0.0.1:5000
- 
-4.使用 Web 界面：
- 打开浏览器，访问 http://127.0.0.1:5000。
- 在页面上上传一个 CSV 文件（确保包含所有必需的特征列）。
- 提交后，页面将显示预测结果（以 JSON 格式返回）。
+ The Flask application will start, and the default address is http://127.0.0.1:5000.
+
+4.**Use the Web Interface**:
+ Open your browser and visit http://127.0.0.1:5000.
+ Upload a CSV file on the page (ensure it contains all required feature columns).
+ After submission, the page will display the prediction results (returned in JSON format).
