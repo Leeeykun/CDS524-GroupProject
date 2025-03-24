@@ -59,13 +59,13 @@
    ```bash
    pip install -r requirements.txt
 
-4. 启动 Flask 应用：
+3. 启动 Flask 应用：
   在项目根目录下运行以下命令：
-  Flask 应用将启动，默认地址为 http://127.0.0.1:5000
-  ```bash
-  python app.py
+  Flask 应用将启动
+   ```bash
+   python app.py
+ 默认地址为 http://127.0.0.1:5000
  
-
 4.使用 Web 界面：
  打开浏览器，访问 http://127.0.0.1:5000。
  在页面上上传一个 CSV 文件（确保包含所有必需的特征列）。
