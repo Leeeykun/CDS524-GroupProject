@@ -2,20 +2,6 @@
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue) ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.3.2-orange) ![Flask](https://img.shields.io/badge/Flask-2.3.3-green) ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-diabetes-prediction-system/
-│
-├── data.csv                    # 数据集文件
-├── feature_selection.ipynb     # 特征选择代码
-├── model_training.ipynb        # 模型训练和评估代码
-├── app.py                      # Flask Web 应用代码
-├── static/                     # 静态文件目录
-│   └── index.html              # 前端页面
-├── diabetes_xgb_model.joblib   # 预训练的 XGBoost 模型
-├── standard_scaler.pkl         # 标准化器文件
-├── requirements.txt            # 依赖文件
-└── README.md                   # 项目说明文档
-
-
 ## 项目概述
 
 糖尿病预测系统是一个基于机器学习的预测工具，旨在通过患者的健康数据预测其是否可能患有糖尿病。该系统使用多种特征选择方法和机器学习模型对数据进行分析，并通过一个基于 **Flask** 的 Web 服务提供批量预测功能。前端通过 HTML 页面与后端交互，用户可以上传 CSV 文件以获取预测结果。
