@@ -60,8 +60,8 @@
    pip install -r requirements.txt
 
 3. 启动 Flask 应用：
-  在项目根目录下运行以下命令：
-  Flask 应用将启动
+  在项目根目录下运行以下命令
+  Flask 应用将启动:
    ```bash
    python app.py
  默认地址为 http://127.0.0.1:5000
