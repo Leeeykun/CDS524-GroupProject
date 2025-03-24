@@ -5,7 +5,6 @@
 diabetes-prediction-system/
 │
 ├── data.csv                    # 数据集文件
-├── data_cleaning.ipynb         # 数据清理代码
 ├── feature_selection.ipynb     # 特征选择代码
 ├── model_training.ipynb        # 模型训练和评估代码
 ├── app.py                      # Flask Web 应用代码
@@ -39,7 +38,6 @@ diabetes-prediction-system/
 
 1. **数据清理**：
    - 检查缺失值和重复值
-   - 初步数据探索（`df.info()` 和 `df.describe()`）
 
 2. **特征选择**：
    - 使用多种方法选择重要特征：
