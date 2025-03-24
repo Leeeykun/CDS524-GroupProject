@@ -52,8 +52,8 @@
 ### 安装步骤
 1. 克隆项目仓库：
    ```bash
-   git clone https://github.com/your-username/diabetes-prediction-system.git
-   cd diabetes-prediction-system
+   git clone [https://github.com/your-username/diabetes-prediction-system.git](https://github.com/Leeeykun/CDS524-GroupProject.git)
+   cd CDS524-GroupProject.git
 
 2. 安装依赖：
    ```bash
