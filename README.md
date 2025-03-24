@@ -19,6 +19,7 @@
 - 生活方式特征（如吸烟、饮酒、运动）
 - 临床指标（如血压、血糖、HbA1c）
 - 目标变量 `Diagnosis`（0 表示未患糖尿病，1 表示患糖尿病）
+- 更多详细变量描述请看 Description of the variable.pdf
 
 ## 功能
 
