@@ -14,7 +14,7 @@ This project includes the following main features:
 
 ## Dataset
 
-The project uses the dataset `data.csv`, which contains 1879 records and 46 features, including:
+The project uses the dataset `p1_before_scaling.csv`, which contains 1879 records and 46 features, including:
 - Basic patient information (e.g., age, gender, BMI)
 - Lifestyle factors (e.g., smoking, alcohol consumption, physical activity)
 - Clinical indicators (e.g., blood pressure, blood sugar, HbA1c)
